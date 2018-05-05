@@ -15,6 +15,9 @@ module.exports = {
       'public': path.resolve(__dirname, './public')
     }
   },
+  node: {
+    fs: 'empty'
+  },
   module: {
     rules: [
       {
@@ -29,7 +32,14 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        exclude: /node_modules/
+        include: [
+          path.resolve('src'), 
+          path.resolve('main.js'), 
+          path.resolve('node_modules/_ws@5.1.1@ws'),
+          path.resolve('node_modules/_bufferutil@3.0.4@bufferutil'),
+          path.resolve('node_modules/_utf-8-validate@4.0.1@utf-8-validate')
+        ]
+        //exclude: /node_modules/
       },
       {
         test: /\.(png|jpg|gif|svg)$/,

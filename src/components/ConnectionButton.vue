@@ -153,7 +153,6 @@ export default {
   },
   mounted() {
     this.$emit('connection-changed');
-    console.log(123);
   },
   name: "connection-button"
 };
