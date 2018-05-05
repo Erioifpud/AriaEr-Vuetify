@@ -45,14 +45,18 @@ export default {
     };
   },
   methods: {
-    changeServerOption() {
-      var opt = this.$refs.connectionBtn.getAria2Option;
+    changeServerOption(opt) {
+      // var opt = this.$refs.connectionBtn.getAria2Option;
       window.aria2 = new Aria2(opt);
       this.connected = false;
     },
-    showConnectMessage(err) {
+    showConnectMessage(err, res) {
       if (err) {
         this.$refs.notificationBar.show("error", err.message);
+        this.connected = false;
+        return;
+      } else if (res[0].hasOwnProperty('code') && res[0].code !== '0') {
+        this.$refs.notificationBar.show("error", res[0].message);
         this.connected = false;
         return;
       }
@@ -69,9 +73,11 @@ export default {
       }
     },
     processResponse(err, res) {
-      this.showConnectMessage(res[0].code && res[0].code !== '0' ? res[0] : err);
-      this.tasks = _.concat(res[0][0] || [], res[1][0] || [], res[2][0] || []);
-      this.options = _.concat(res[3][0] || [], res[4][0] || [], res[5][0] || []);
+      this.showConnectMessage(err, res);
+      if (this.connected) {
+        this.tasks = _.concat(res[0][0] || [], res[1][0] || [], res[2][0] || []);
+        this.options = _.concat(res[3][0] || [], res[4][0] || [], res[5][0] || []);
+      }
     },
     refresh() {
       util.multicall(window.aria2, this.processResponse);

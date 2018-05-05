@@ -44,7 +44,7 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="blue darken-1" flat @click.native="dialog = false">Close</v-btn>
-        <v-btn color="blue darken-1" flat @click.native="dialog = false" @click="$emit('connection-changed')">Connect</v-btn><!-- -->
+        <v-btn color="blue darken-1" flat @click.native="dialog = false" @click="sendConnectionChangedEvent">Connect</v-btn><!-- -->
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -117,6 +117,9 @@ export default {
       }
     }
     */
+    sendConnectionChangedEvent() {
+      this.$emit('connection-changed', this.getAria2Option);
+    }
   },
   localStorage: {
     ariaerSecure: {
@@ -152,7 +155,7 @@ export default {
     }
   },
   mounted() {
-    this.$emit('connection-changed');
+    this.sendConnectionChangedEvent();
   },
   name: "connection-button"
 };
