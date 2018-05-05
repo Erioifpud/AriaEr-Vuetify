@@ -69,7 +69,7 @@ export default {
       }
     },
     processResponse(err, res) {
-      this.showConnectMessage(err);
+      this.showConnectMessage(res[0].code && res[0].code !== '0' ? res[0] : err);
       this.tasks = _.concat(res[0][0] || [], res[1][0] || [], res[2][0] || []);
       this.options = _.concat(res[3][0] || [], res[4][0] || [], res[5][0] || []);
     },
