@@ -7,7 +7,7 @@
         <speed-chip :speed="options[1].uploadSpeed" color="indigo" icon="file_upload"></speed-chip>
         <speed-chip :speed="options[1].downloadSpeed" color="teal" icon="file_download"></speed-chip>
       </template>
-      <add-link-button :global-option="options[5]" @show-action-message="showActionMessage"></add-link-button>
+      <add-link-button :global-option="options[2]" @show-action-message="showActionMessage"></add-link-button>
       <connection-button @connection-changed="changeServerOption" ref="connectionBtn"></connection-button>
       <v-btn dark>
         <v-icon>info_outline</v-icon>

@@ -14,15 +14,16 @@
             <v-flex xs12>
               <v-text-field v-model="linkText" label="Links" textarea required></v-text-field>
             </v-flex>
-            <!--
-            <v-flex xs12>
-              <v-text-field label="Path" required></v-text-field>
-            </v-flex>
-            -->
-            <v-flex xs12>
+            <v-flex xs6>
               <!--
               <upload-button title="Torrent" :selectedCallback="updateTorrentFile"></upload-button>
+              
+              <input type="file" v-on:change="test">
               -->
+              <v-text-field v-model="rpath" label="Relative path"></v-text-field>
+            </v-flex>
+            <v-flex xs6>
+              <v-text-field v-model="connections" label="Max connections"></v-text-field>
             </v-flex>
           </v-layout>
         </v-container>
@@ -30,7 +31,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" flat @click.native="dialog = false" @click="test()">Close</v-btn>
+        <v-btn color="blue darken-1" flat @click.native="dialog = false">Close</v-btn>
         <v-btn color="blue darken-1" flat @click.native="dialog = false" @click="doAddLink()">Save</v-btn>
       </v-card-actions>
     </v-card>
@@ -44,20 +45,16 @@ export default {
   data() {
     return {
       dialog: false,
-      linkText: '',
-      torrent: null
+      linkText: "",
+      torrent: undefined,
+      rpath: '/',
+      connections: 5
     };
   },
   components: {
     UploadButton
   },
   methods: {
-    test() {
-
-    },
-    updateTorrentFile(file) {
-      console.log(file);
-    },
     doAction(action, links, options) {
       var self = this;
       window.aria2.send(action, links, options, function(err, res) {
@@ -68,8 +65,22 @@ export default {
       });
     },
     doAddLink() {
-      var links = this.linkText.split('\n');
-      this.doAction('addUri', links, this.globalOption);
+      var links = this.linkText.split("\n");
+      var option = {};
+      option['dir'] = this.getAbsolutePath;
+      option['max-connection-per-server'] =  this.connections || this.globalOption['max-connection-per-server'];
+      this.doAction("addUri", links, option);
+      /*
+      if (this.torrent) {
+        this.doAction('addTorrent', [].concat(this.torrent), option);
+        this.torrent = undefined;
+      }
+      */
+    }
+  },
+  computed: {
+    getAbsolutePath() {
+      return this.globalOption.dir + this.rpath;
     }
   },
   props: {
